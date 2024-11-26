@@ -1,100 +1,72 @@
 import { Layout, Input, Text, Card, Spinner } from "@ui-kitten/components";
-import { useContext, useEffect, useState } from "react";
+import { React, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../provider/auth";
 import Toast from 'react-native-toast-message';
 import { FlashList } from "@shopify/flash-list";
 import { useFrappe } from "../provider/backend";
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { StyleSheet, View } from 'react-native';
 
-
-const TodoItem = ({ item }) => {
-  return (
-    <Card key={item.name} style={{ width: "100%", marginBottom: 10 }}>
-      <Text>{item.description}</Text>
-    </Card>
-  );
+const INITIAL_REGION = {
+  latitude: 39.6953,
+  longitude: 2.9214,
+  latitudeDelta: 1.25,
+  longitudeDelta: 1.25,
 };
+
+const MALLORCA_MARKERS = [
+  {
+    latitude: 39.5696,
+    longitude: 2.6502,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    name: 'Palma Cathedral',
+  },
+  {
+    latitude: 39.7952,
+    longitude: 3.1270,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    name: 'Alcudia Old Town',
+  },
+  {
+    latitude: 39.7612,
+    longitude: 3.0172,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    name: 'Cap de Formentor',
+  },
+  {
+    latitude: 39.5373,
+    longitude: 2.9872,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+    name: 'Bellver Castle',
+  },
+];
+
 
 export const MapScreen = () => {
-  const { accessToken, refreshAccessTokenAsync } = useContext(AuthContext);
-  const [todos, setTodos] = useState([]);
-  const [loadingTodos, setLoadingTodos] = useState(false);
-  const [todo, setTodo] = useState("");
-  const { db } = useFrappe()
-
-  useEffect(() => {
-    fetchTodos();
-  }, [accessToken]);
-
-  function fetchTodos() {
-    setLoadingTodos(true);
-    db.getDocList("ToDo", { fields: "*", orderBy: { field: "creation", order: "desc" } })
-      .then((res) => {
-        setTodos(res);
-      })
-      .catch(async (e) => {
-        if (e.httpStatus === 403 || e.httpStatus === 401) {
-          await refreshAccessTokenAsync();
-        } else {
-          console.error(e);
-          Toast.show({
-            type: "error",
-            position: 'top',
-            text1: 'Error',
-            text2: e.message
-          });
-        }
-      })
-      .finally(() => {
-        setLoadingTodos(false);
-      });
-  }
-
   return (
-    <Layout
-      style={{
-        flex: 1,
-        alignItems: "center",
-        paddingHorizontal: 20,
-        paddingTop: 20,
-      }}
-    >
-      <Input
-        value={todo}
-        onSubmitEditing={() => {
-          db.createDoc("ToDo", { description: todo }).then((res) => {
-            setTodo("");
-            fetchTodos();
-          });
-
-          Toast.show({
-            type: 'success',
-            position: 'top',
-            text1: 'Success',
-            text2: 'Todo added successfully'
-          });
-        }}
-        onChangeText={(nextValue) => setTodo(nextValue)}
-        placeholder="What needs to be done?"
-        style={{ marginBottom: 20 }}
-      />
-
-      {!loadingTodos &&
-        <Layout style={{ width: "100%", height: "100%" }}>
-          <FlashList
-            data={todos}
-            renderItem={TodoItem}
-            estimatedItemSize={100}
-            onRefresh={fetchTodos}
-            refreshing={loadingTodos}
-          />
-        </Layout>
-      }
-
-      {loadingTodos && (
-        <Layout style={{ marginTop: 50 }}>
-          <Spinner />
-        </Layout>
-      )}
-    </Layout>
+    <View style={styles.container}>
+      <MapView
+      style={styles.map}
+      provider={PROVIDER_GOOGLE}
+      initialRegion={INITIAL_REGION}
+      showsUserLocation
+      showsMyLocationButton >
+        {MALLORCA_MARKERS.map((marker, index) => (<Marker key={index} coordinate={marker} title={marker.name} />))}
+      </MapView>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+});
