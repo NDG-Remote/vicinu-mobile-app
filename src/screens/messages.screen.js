@@ -4,7 +4,8 @@ import { AuthContext } from "../provider/auth";
 import Toast from 'react-native-toast-message';
 import { FlashList } from "@shopify/flash-list";
 import { useFrappe } from "../provider/backend";
-
+import 'react-native-get-random-values'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const TodoItem = ({ item }) => {
   return (
@@ -50,51 +51,19 @@ export const MessagesScreen = () => {
   }
 
   return (
-    <Layout
-      style={{
-        flex: 1,
-        alignItems: "center",
-        paddingHorizontal: 20,
-        paddingTop: 20,
+
+    <GooglePlacesAutocomplete
+      placeholder='Search'
+      onPress={(data, details = null) => {
+        // 'details' is provided when fetchDetails = true
+        console.log(data, details);
       }}
-    >
-      <Input
-        value={todo}
-        onSubmitEditing={() => {
-          db.createDoc("ToDo", { description: todo }).then((res) => {
-            setTodo("");
-            fetchTodos();
-          });
+      query={{
+        key: 'AIzaSyBnXwXMsLIcDuPvP2x2X3fYDlkWqjKwNq4',
+        language: 'en',
+      }}
+    />
 
-          Toast.show({
-            type: 'success',
-            position: 'top',
-            text1: 'Success',
-            text2: 'Todo added successfully'
-          });
-        }}
-        onChangeText={(nextValue) => setTodo(nextValue)}
-        placeholder="What needs to be done?"
-        style={{ marginBottom: 20 }}
-      />
 
-      {!loadingTodos &&
-        <Layout style={{ width: "100%", height: "100%" }}>
-          <FlashList
-            data={todos}
-            renderItem={TodoItem}
-            estimatedItemSize={100}
-            onRefresh={fetchTodos}
-            refreshing={loadingTodos}
-          />
-        </Layout>
-      }
-
-      {loadingTodos && (
-        <Layout style={{ marginTop: 50 }}>
-          <Spinner />
-        </Layout>
-      )}
-    </Layout>
   );
 };

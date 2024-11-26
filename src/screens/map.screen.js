@@ -6,6 +6,8 @@ import { FlashList } from "@shopify/flash-list";
 import { useFrappe } from "../provider/backend";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, View } from 'react-native';
+import 'react-native-get-random-values'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const INITIAL_REGION = {
   latitude: 39.6953,
@@ -49,6 +51,17 @@ const MALLORCA_MARKERS = [
 export const MapScreen = () => {
   return (
     <View style={styles.container}>
+    <GooglePlacesAutocomplete
+      placeholder='Search'
+      onPress={(data, details = null) => {
+        // 'details' is provided when fetchDetails = true
+        console.log(data, details);
+      }}
+      query={{
+        key: 'AIzaSyBnXwXMsLIcDuPvP2x2X3fYDlkWqjKwNq4',
+        language: 'en',
+      }}
+    />
       <MapView
       style={styles.map}
       provider={PROVIDER_GOOGLE}
