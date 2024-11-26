@@ -14,7 +14,7 @@ export default {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "scheme": "io.frappe.changemakers",
+    "scheme": "io.frappe.vicinu",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -23,14 +23,14 @@ export default {
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": IS_DEV ? 'io.changemakers.dev' : 'io.frappe.changemakers',
+      "bundleIdentifier": IS_DEV ? 'io.changemakers.dev' : 'io.frappe.vicinu',
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "io.frappe.changemakers"
+      "package": "io.frappe.vicinu"
     },
     "web": {
       "favicon": "./assets/favicon.png"

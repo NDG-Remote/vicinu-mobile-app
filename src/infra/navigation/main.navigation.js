@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { HomeScreen } from "../../screens/home.screen";
-import { DetailsScreen } from "../../screens/details.screen";
+import { MapScreen } from "../../screens/map.screen";
+import { MessagesScreen } from "../../screens/messages.screen";
+import { ProfileScreen } from "../../screens/profile.screen";
 import { BottomNavigation, BottomNavigationTab } from "@ui-kitten/components";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -17,16 +19,18 @@ const BottomTabBar = ({ navigation, state }) => (
     onSelect={(index) => navigation.navigate(state.routeNames[index])}
   >
     <BottomNavigationTab title="Home" />
-    <BottomNavigationTab title="Todos" />
-    <BottomNavigationTab title="User" />
+    <BottomNavigationTab title="Map" />
+    <BottomNavigationTab title="Messages" />
+    <BottomNavigationTab title="Profile" />
   </BottomNavigation>
 );
 
 const TabNavigator = () => (
   <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
     <Screen name="Home" component={HomeScreen} />
-    <Screen name="ToDo" component={TodoScreen} />
-    <Screen name="Details" component={DetailsScreen} />
+    <Screen name="Map" component={MapScreen} />
+    <Screen name="Messages" component={MessagesScreen} />
+    <Screen name="Profile" component={ProfileScreen} />
   </Navigator>
 );
 
