@@ -1,69 +1,36 @@
-import { Layout, Input, Text, Card, Spinner } from "@ui-kitten/components";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../provider/auth";
-import Toast from 'react-native-toast-message';
-import { FlashList } from "@shopify/flash-list";
-import { useFrappe } from "../provider/backend";
-import 'react-native-get-random-values'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
-const TodoItem = ({ item }) => {
-  return (
-    <Card key={item.name} style={{ width: "100%", marginBottom: 10 }}>
-      <Text>{item.description}</Text>
-    </Card>
-  );
-};
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { ImageSlider } from "../data/SliderData";
+import SliderItem from "../components/SliderItem";
 
 export const MessagesScreen = () => {
-  const { accessToken, refreshAccessTokenAsync } = useContext(AuthContext);
-  const [todos, setTodos] = useState([]);
-  const [loadingTodos, setLoadingTodos] = useState(false);
-  const [todo, setTodo] = useState("");
-  const { db } = useFrappe()
-
-  useEffect(() => {
-    fetchTodos();
-  }, [accessToken]);
-
-  function fetchTodos() {
-    setLoadingTodos(true);
-    db.getDocList("ToDo", { fields: "*", orderBy: { field: "creation", order: "desc" } })
-      .then((res) => {
-        setTodos(res);
-      })
-      .catch(async (e) => {
-        if (e.httpStatus === 403 || e.httpStatus === 401) {
-          await refreshAccessTokenAsync();
-        } else {
-          console.error(e);
-          Toast.show({
-            type: "error",
-            position: 'top',
-            text1: 'Error',
-            text2: e.message
-          });
-        }
-      })
-      .finally(() => {
-        setLoadingTodos(false);
-      });
-  }
-
   return (
-
-    <GooglePlacesAutocomplete
-      placeholder='Search'
-      onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        console.log(data, details);
-      }}
-      query={{
-        key: 'AIzaSyBnXwXMsLIcDuPvP2x2X3fYDlkWqjKwNq4',
-        language: 'en',
-      }}
-    />
-
-
+    <View style={styles.container}>
+      <FlatList
+        data={ImageSlider}
+        renderItem={({ item, index }) => (
+            <SliderItem item={item} index={index} />
+        )}
+        horizontal
+        showsHorizontalScrollIndicator={false} // hides the horizontal scroll bar
+        pagingEnabled // Snapping Effect - allows the user to scroll through the images one at a time
+      />
+    </View>
   );
-};
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 20,
+  },
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
