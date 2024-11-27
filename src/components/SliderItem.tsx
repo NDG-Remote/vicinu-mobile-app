@@ -1,6 +1,8 @@
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import { ImageSliderType } from "../data/SliderData";
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 type Props = {
     item: ImageSliderType;
@@ -13,14 +15,18 @@ const SliderItem = ({item, index}: Props) => {
     return (
         <View style={styles.itemContainer}>
             <Image source={item.image} style={{width: 300, height: 500, borderRadius: 20}} />
-            <View>
-                <TouchableOpacity>
-                    <Text>Next</Text>
-                </TouchableOpacity>
-            </View>
             <View style={styles.background}>
-                <Text>{item.title}</Text>
-                <Text>{item.description}</Text>
+                <View style={{alignItems:"flex-end"}}>
+                    <TouchableOpacity style={styles.icon}>
+                        <View>
+                            <Ionicons name="eye" size={32} color="#fff" />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.textbox}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.description}>{item.description}</Text>
+                </View>
             </View>
         </View>
     )
@@ -40,5 +46,28 @@ const styles = StyleSheet.create({
         height: 500,
         width: 300,
         padding: 20,
+        justifyContent: "space-between",
+    },
+    textbox: {
+        backgroundColor: "rgba(0,0,0,0.5)",
+        gap: 10,
+        padding: 10,
+        borderRadius: 10,
+    },
+    icon: {
+        backgroundColor: "rgba(0,0,0,0.5)",
+        padding: 10,
+        borderRadius: 10,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: "700",
+        color: "#fff",
+        letterSpacing: 1.5,
+    },
+    description: {
+        fontSize: 16,
+        color: "#fff",
+        letterSpacing: 1.2,
     }
 });
